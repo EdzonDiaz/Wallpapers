@@ -99,23 +99,6 @@
         {
             "name":"",
             "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall38.jpg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall38.jpg",
-            "downloadable":true
-        },
-        
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall37.jpg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall37.jpg",
-            "downloadable":true
-        },  
-        
-        
-        {
-            "name":"",
-            "author":"",
             "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall36.jpeg",
             "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall36.jpeg",
             "downloadable":true
@@ -140,16 +123,16 @@
         {
             "name":"",
             "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall33.jpeg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall33.jpeg",
+            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall32.jpeg",
+            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall32.jpeg",
             "downloadable":true
         },
         
         {
             "name":"",
             "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall32.jpeg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall32.jpeg",
+            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall33.jpeg",
+            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall33.jpeg",
             "downloadable":true
         },
         
@@ -240,23 +223,7 @@
             "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall21.jpeg",
             "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall21.jpeg",
             "downloadable":true
-        },        
-
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall20.jpeg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall20.jpeg",
-            "downloadable":true
-        },
-        
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall19.jpeg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall19.jpeg",
-            "downloadable":true
-        },       
+        },  
 
         {
             "name":"",
@@ -288,23 +255,7 @@
             "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall15.png",
             "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall15.jpg",
             "downloadable":true
-        },  
-        
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall14.jpeg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall14.jpeg",
-            "downloadable":true
-        },
-        
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall13.png",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall13.jpg",
-            "downloadable":true
-        },        
+        },   
                
         {
             "name":"",
@@ -388,23 +339,6 @@
             "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall03.jpg",
             "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall03.jpg",
             "downloadable":true
-        },       
-        
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall02.jpg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall02.jpg",
-            "downloadable":true
-        },
-
-        
-        {
-            "name":"",
-            "author":"",
-            "url":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Wall01.jpg",
-            "thumbnail":"https://raw.githubusercontent.com/EdzonDM/Wallpapers/main/Wall/Preview/Wall01.jpg",
-            "downloadable":true
-        }  
+        }
         
 ]
