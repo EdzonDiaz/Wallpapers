@@ -1,4 +1,4 @@
-**Linebit - Privacy Policy**
+## **Linebit - Privacy Policy**
 
 Edzon Diaz built the Linebit app as a Commercial app. This SERVICE is provided by Edzon Diaz and is intended for use as is.
 
