@@ -24,11 +24,28 @@ IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 PREVIEW_DIR_NAME = "Preview"
 JSON_FILE_NAME = "Walls.json"
 PREVIEW_MAX_WIDTH = 600
-PREVIEW_JPEG_QUALITY = 82
+PREVIEW_WEBP_QUALITY = 80
 
 
 def natural_sort_key(text: str) -> list[int | str]:
     return [int(part) if part.isdigit() else part.lower() for part in re.split(r"(\d+)", text)]
+
+
+def sanitize_wallpaper_filenames(repo_root: Path) -> int:
+    renamed = 0
+    for item in sorted(repo_root.iterdir(), key=lambda p: p.name):
+        if not item.is_file() or item.name.startswith("."):
+            continue
+        if item.suffix.lower() not in IMAGE_EXTENSIONS:
+            continue
+        if " " not in item.name:
+            continue
+        clean_stem = re.sub(r"\s+", "_", item.stem).strip("_")
+        target = item.with_name(f"{clean_stem}{item.suffix.lower()}")
+        if not target.exists():
+            item.rename(target)
+            renamed += 1
+    return renamed
 
 
 def list_root_wallpapers(repo_root: Path) -> list[Path]:
@@ -42,47 +59,43 @@ def list_root_wallpapers(repo_root: Path) -> list[Path]:
 
 
 def preview_name_for(wallpaper: Path) -> str:
-    return f"{wallpaper.stem}.jpg"
+    return f"{wallpaper.stem}.webp"
 
 
 def generate_preview_pillow(src: Path, dst: Path) -> None:
     with Image.open(src) as img:
         img = ImageOps.exif_transpose(img)
-        if img.mode in ("RGBA", "LA", "P"):
-            background = Image.new("RGB", img.size, (0, 0, 0))
-            if img.mode == "P":
-                img = img.convert("RGBA")
-            background.paste(img, mask=img.split()[-1] if img.mode in ("RGBA", "LA") else None)
-            img = background
-        elif img.mode != "RGB":
-            img = img.convert("RGB")
+        if img.mode not in ("RGB", "RGBA"):
+            img = img.convert("RGBA" if "A" in img.getbands() else "RGB")
 
         width, height = img.size
         if width > PREVIEW_MAX_WIDTH:
             new_height = max(1, round(height * (PREVIEW_MAX_WIDTH / width)))
             img = img.resize((PREVIEW_MAX_WIDTH, new_height), Image.Resampling.LANCZOS)
 
-        img.save(dst, format="JPEG", quality=PREVIEW_JPEG_QUALITY, optimize=True, progressive=True)
+        img.save(dst, format="WEBP", quality=PREVIEW_WEBP_QUALITY, method=6)
 
 
-def generate_preview_sips(src: Path, dst: Path) -> None:
-    sips_bin = shutil.which("sips")
-    if not sips_bin:
-        raise RuntimeError("Neither Pillow nor macOS 'sips' is available to generate previews.")
+def generate_preview_ffmpeg(src: Path, dst: Path) -> None:
+    ffmpeg_bin = shutil.which("ffmpeg")
+    if not ffmpeg_bin:
+        raise RuntimeError("Neither Pillow nor 'ffmpeg' is available to generate WebP previews.")
 
-    probe = subprocess.run(
-        [sips_bin, "-g", "pixelWidth", str(src)],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    match = re.search(r"pixelWidth:\s*(\d+)", probe.stdout)
-    width = int(match.group(1)) if match else PREVIEW_MAX_WIDTH
-
-    cmd = [sips_bin, "-s", "format", "jpeg", "-s", "formatOptions", str(PREVIEW_JPEG_QUALITY)]
-    if width > PREVIEW_MAX_WIDTH:
-        cmd.extend(["--resampleWidth", str(PREVIEW_MAX_WIDTH)])
-    cmd.extend([str(src), "--out", str(dst)])
+    cmd = [
+        ffmpeg_bin,
+        "-y",
+        "-loglevel",
+        "error",
+        "-i",
+        str(src),
+        "-vf",
+        f"scale='min({PREVIEW_MAX_WIDTH},iw)':-2",
+        "-c:v",
+        "libwebp",
+        "-quality",
+        str(PREVIEW_WEBP_QUALITY),
+        str(dst),
+    ]
     subprocess.run(cmd, capture_output=True, text=True, check=True)
 
 
@@ -90,7 +103,7 @@ def generate_preview(src: Path, dst: Path) -> None:
     if HAS_PILLOW:
         generate_preview_pillow(src, dst)
     else:
-        generate_preview_sips(src, dst)
+        generate_preview_ffmpeg(src, dst)
 
 
 def load_existing_entries(json_path: Path) -> list[dict]:
@@ -114,6 +127,7 @@ def sync(repo_root: Path, repo_slug: str, branch: str, force_previews: bool) -> 
     preview_dir.mkdir(exist_ok=True)
     json_path = repo_root / JSON_FILE_NAME
 
+    renamed_count = sanitize_wallpaper_filenames(repo_root)
     wallpapers = list_root_wallpapers(repo_root)
     wallpapers_by_name = {w.name: w for w in wallpapers}
     expected_previews: set[str] = set()
@@ -151,6 +165,12 @@ def sync(repo_root: Path, repo_slug: str, branch: str, force_previews: bool) -> 
         if filename in wallpapers_by_name and filename not in seen_names:
             seen_names.add(filename)
             ordered_existing.append((filename, entry))
+        elif " " in filename:
+            stem, ext = os.path.splitext(filename)
+            clean_filename = f"{re.sub(r'\\s+', '_', stem).strip('_')}{ext.lower()}"
+            if clean_filename in wallpapers_by_name and clean_filename not in seen_names:
+                seen_names.add(clean_filename)
+                ordered_existing.append((clean_filename, entry))
 
     new_wallpapers = [w.name for w in wallpapers if w.name not in seen_names]
 
@@ -181,8 +201,8 @@ def sync(repo_root: Path, repo_slug: str, branch: str, force_previews: bool) -> 
 
     print(
         f"Synced {len(final_entries)} wallpapers "
-        f"(new: {len(new_wallpapers)}, previews generated: {created_previews}, "
-        f"orphaned previews removed: {removed_previews})."
+        f"(new: {len(new_wallpapers)}, renamed: {renamed_count}, "
+        f"previews generated: {created_previews}, orphaned previews removed: {removed_previews})."
     )
 
 
