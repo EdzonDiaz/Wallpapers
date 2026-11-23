@@ -1,0 +1,55 @@
+name: Sync Wallpapers & Previews
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      force_previews:
+        description: "Regenerate all thumbnails in Preview/"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-wallpapers-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+
+      - name: Generate previews and update Walls.json
+        run: |
+          if [ "${{ inputs.force_previews }}" = "true" ]; then
+            python .github/scripts/sync_wallpapers.py --force-previews
+          else
+            python .github/scripts/sync_wallpapers.py
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Preview/ Walls.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: sync previews and Walls.json [skip ci]"
+            git push
+          fi
